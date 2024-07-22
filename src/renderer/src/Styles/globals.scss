@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  box-sizing: border-box;
+  font-family: 'Jost', sans-serif;
+
+  --color-light: #ffffff;
+  --color-smoke: #f5f5f5cf;
+  --color-card-hover: #ffffff33;
+  --color-primary: #ffc418;
+  --color-primary-shadow: #ffc61a80;
+  --color-dark: #131313;
+  --card: #252536;
+  --card-one: #1d1d24;
+}
+
+html,
+body {
+  font-size: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  color: white;
+}
+
+@media (min-width: 1200px) and (max-width: 1500px) {
+  html {
+    font-size: 87.5%;
+  }
+}

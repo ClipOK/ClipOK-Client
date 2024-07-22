@@ -1,0 +1,19 @@
+.main {
+  height: 100vh;
+  width: 100%;
+  background-color: black;
+
+  .loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid;
+    border-color: #ffffff #ffffff;
+    animation: l1 1s infinite;
+  }
+  @keyframes l1 {
+    to {
+      transform: rotate(0.5turn);
+    }
+  }
+}

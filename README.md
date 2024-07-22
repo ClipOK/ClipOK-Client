@@ -1,0 +1,1 @@
+# CLIPOK - Universal Clipboard Manager

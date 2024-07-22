@@ -1,0 +1,350 @@
+.mainArea {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  > .QuarterOne {
+    height: 50%;
+    width: 50%;
+    padding: 3rem 2rem 2rem 2rem;
+
+    > h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    > .card {
+      width: 85%;
+      height: fit-content;
+      padding: 0;
+      margin: 2rem 0 0 0;
+      border-radius: 0rem;
+      // border-top-right-radius: 10rem;
+      // border-bottom-right-radius: 10rem;
+
+      > .titleWrapper {
+        > p {
+          color: var(--color-light);
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+      }
+    }
+
+    > .mainContent {
+      margin: 1rem 0;
+      width: 85%;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      > .card {
+        aspect-ratio: 1/1;
+        background-color: var(--card-one);
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.75rem;
+        border-radius: 0.75rem;
+        transition: all 0.15s ease-in-out;
+        border: 1px solid transparent;
+
+        > svg {
+          transition: all 0.15s ease-in-out;
+          font-size: 1.75rem;
+        }
+
+        > p {
+          color: white;
+          font-size: 1rem;
+          font-weight: 600;
+          transition: all 0.15s ease-in-out;
+        }
+
+        &:hover {
+          cursor: pointer;
+          background-color: var(--color-dark);
+          transform: scale(1.05);
+
+          > svg {
+            transform: scale(1.05);
+          }
+
+          > p {
+            transform: scale(1.05);
+          }
+
+          border: 1px solid var(--color-smoke);
+        }
+      }
+    }
+  }
+
+  > .QuarterTwo {
+    height: 50%;
+    width: 50%;
+    padding: 3rem 2rem 0 2rem;
+    display: flex;
+    flex-direction: column;
+
+    > h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      color: white;
+    }
+
+    .animate {
+      animation: pulseanimation 0.5s infinite;
+    }
+
+    > .mainArea {
+      height: 100%;
+      width: 85%;
+      padding: 1rem;
+      border-radius: 1rem;
+      margin: 1rem 0;
+      background-color: var(--card-one);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      > svg {
+        font-size: 2.5rem;
+        color: var(--color-smoke);
+      }
+
+      > p {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 1rem 0 0 0;
+
+        &:nth-child(3) {
+          font-weight: 400;
+          margin: 0;
+          font-size: 0.8rem;
+          color: var(--color-smoke);
+        }
+      }
+
+      > input {
+        display: none;
+        height: 100vh;
+        width: 100%;
+        opacity: 0;
+      }
+    }
+
+    @keyframes pulseanimation {
+      0% {
+        box-shadow: 0 0 0 0px rgba(255, 255, 255, 0.75);
+      }
+      20% {
+        box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.5);
+      }
+      40% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.25);
+      }
+      80% {
+        box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.15);
+      }
+      100% {
+        box-shadow: 0 0 0 20px rgba(255, 255, 255, 0.05);
+      }
+    }
+  }
+
+  > .QuarterThree {
+    height: 50%;
+    width: 50%;
+    padding: 0rem 2rem;
+    display: flex;
+    flex-direction: column;
+
+    > .heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 85%;
+
+      > h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: white;
+      }
+
+      > .viewAll {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        border: 1px solid transparent;
+        padding: 1rem 2rem;
+        transition: all 0.15s ease-in-out;
+
+        &:hover {
+          cursor: pointer;
+          border: 1px solid var(--color-smoke);
+          border-radius: 10rem;
+
+          > svg {
+            transform: translateX(0.25rem);
+          }
+        }
+
+        > p {
+          color: var(--color-light);
+          font-size: 1rem;
+          font-weight: 600;
+        }
+
+        > svg {
+          font-size: 1.25rem;
+          color: var(--color-light);
+          transition: all 0.15s ease-in-out;
+        }
+      }
+    }
+
+    > .cardWrapper {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem 0;
+      overflow: auto;
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      > .card {
+        width: 85%;
+        max-width: 85%;
+        background-color: var(--card-one);
+        padding: 1rem 1.5rem;
+        border-radius: 0rem;
+        transition: all 0.15s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 0.75rem;
+
+        > .fileDataWrapper {
+          display: flex;
+          justify-content: center;
+          flex-direction: column;
+          gap: 0.5rem;
+
+          > p {
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+          }
+
+          > .size {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+
+            > svg {
+              font-size: 1.25rem;
+            }
+
+            > p {
+              color: var(--color-smoke);
+              font-size: 0.9rem;
+              font-weight: 400;
+            }
+          }
+        }
+
+        > p {
+          color: white;
+          font-size: 1rem;
+          font-weight: 600;
+        }
+
+        > .copyBtn {
+          background-color: var(--card-one);
+          padding: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 100%;
+          aspect-ratio: 1;
+          transition: all 0.15s ease-in-out;
+
+          > svg {
+            font-size: 1.75rem;
+            transition: all 0.15s ease-in-out;
+          }
+
+          &:hover {
+            cursor: pointer;
+            background-color: var(--color-light);
+            > svg {
+              color: var(--color-dark);
+              transform: scale(1.1);
+            }
+          }
+
+          &:active {
+            background-color: var(--color-dark);
+            > svg {
+              color: var(--color-light);
+              transform: scale(1);
+            }
+          }
+        }
+      }
+    }
+  }
+  > .QuarterFour {
+    height: 50%;
+    width: 50%;
+    padding: 0rem 2rem;
+
+    > h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 1rem;
+      color: white;
+    }
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1500px) {
+  .mainArea {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    > .areaQuarter {
+      height: 50%;
+      width: 50%;
+      padding: 2rem;
+
+      > h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        color: white;
+      }
+    }
+  }
+}
