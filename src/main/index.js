@@ -1,6 +1,12 @@
 import * as path from 'path'
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, session } from 'electron'
 import ClipboardWatcher from '../renderer/src/Reusables/Clipboard.js'
+import {
+  setCookie,
+  getCookie,
+  clearAllCookies,
+  deleteCookie
+} from '../renderer/src/Reusables/Cookies.js'
 
 let mainWindow
 
@@ -18,10 +24,8 @@ function createWindow() {
     resizable: true, // Allow resizing
     webPreferences: {
       preload: preloadScriptPath,
-      nodeIntegration: false,
-      contextIsolation: true,
-      sandbox: false,
-      webSecurity: false
+      contextIsolation: true, // Ensure context isolation is enabled
+      nodeIntegration: true // Disable node integration for security
     },
     autoHideMenuBar: true
   })
@@ -29,9 +33,15 @@ function createWindow() {
   mainWindow.setMenuBarVisibility(false)
   mainWindow.loadURL('http://localhost:5173') // Adjust this URL as needed
 
-  const clipboardWatcher = new ClipboardWatcher(200, (newText) => {
-    mainWindow.webContents.send('clipboard-changed', newText)
-  })
+  const clipboardWatcher = new ClipboardWatcher(
+    200,
+    (newText) => {
+      mainWindow.webContents.send('clipboard-changed', newText)
+    },
+    (newImage) => {
+      mainWindow.webContents.send('image-changed', newImage.toDataURL())
+    }
+  )
 
   mainWindow.on('closed', () => {
     clipboardWatcher.stopWatching()

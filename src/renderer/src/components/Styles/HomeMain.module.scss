@@ -228,6 +228,30 @@
         display: none;
       }
 
+      > .emptyCard {
+        width: 85%;
+        height: 100%;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-color: var(--card-one);
+        border-radius: 2rem;
+
+        > svg {
+          font-size: 2rem;
+          color: var(--color-smoke);
+        }
+
+        > p {
+          color: var(--color-smoke);
+          font-size: 1rem;
+          font-weight: 600;
+          margin: 0.5rem 0 0 0;
+        }
+      }
+
       > .card {
         width: 85%;
         max-width: 85%;

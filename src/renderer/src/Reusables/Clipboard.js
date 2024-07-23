@@ -2,13 +2,14 @@ import { clipboard, nativeImage } from 'electron'
 import { EventEmitter } from 'events'
 
 class ClipboardWatcher extends EventEmitter {
-  constructor(interval = 200, onTextChange) {
+  constructor(interval = 200, onTextChange, onImageChange) {
     super()
     this.interval = interval
     this.lastText = clipboard.readText()
     this.lastImage = clipboard.readImage()
     this.lastImageSize = this.lastImage.getSize()
     this.onTextChange = onTextChange
+    this.onImageChange = onImageChange
     this.startWatching()
   }
 
@@ -33,7 +34,12 @@ class ClipboardWatcher extends EventEmitter {
       ) {
         this.lastImage = currentImage
         this.lastImageSize = currentImageSize
+        console.log('Image changed')
+        console.log(currentImage.toDataURL())
         this.emit('image-changed', currentImage)
+        if (this.onImageChange) {
+          this.onImageChange(currentImage)
+        }
       }
     }, this.interval)
   }

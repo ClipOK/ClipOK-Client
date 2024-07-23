@@ -5,7 +5,6 @@ import { useRecoilState, useResetRecoilState } from 'recoil'
 import { clipBoardState } from '../GlobalStates/states.js' // Added the clipBoardState atom
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { MdOutlineContentCopy } from 'react-icons/md'
-import { IoMdRefresh } from 'react-icons/io'
 import { Tooltip } from 'react-tooltip'
 
 const ClipBoard = () => {
@@ -24,10 +23,23 @@ const ClipBoard = () => {
       console.error('window.electron is not defined or does not have onClipboardChanged method')
     }
 
+    if (window.electron && window.electron.onImageChanged) {
+      window.electron.onImageChanged((newImage) => {
+        console.log('Image changed')
+        console.log(newImage)
+      })
+    } else {
+      console.error('window.electron is not defined or does not have onImageChanged method')
+    }
+
     return () => {
       // Clean up the event listener
       if (window.electron && window.electron.onClipboardChanged) {
         window.electron.onClipboardChanged(null)
+      }
+
+      if (window.electron && window.electron.onImageChanged) {
+        window.electron.onImageChanged(null)
       }
     }
   }, [setClipBoard])

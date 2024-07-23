@@ -13,8 +13,12 @@ import { RxOpenInNewWindow } from 'react-icons/rx'
 import { LuFilePieChart } from 'react-icons/lu'
 import socket from '../Socket/socket.js'
 import { sendClips } from '../Socket/functions.js'
+import { clipBoardState } from '../GlobalStates/states.js'
+import { useRecoilState } from 'recoil'
+import { FaInbox } from 'react-icons/fa'
 
 const HomeMain = ({ navigate }) => {
+  const [clipBoard, setClipBoard] = useRecoilState(clipBoardState)
   const [recentlyCopied, setRecentlyCopied] = useState([
     {
       id: 1,
@@ -52,8 +56,7 @@ const HomeMain = ({ navigate }) => {
 
   const copyToClipboard = (content) => {
     navigator.clipboard.writeText(content)
-    sendClips(content, 'singhaditya1226')
-    showToast('Broadcasted!', 'success')
+    showToast('Copied to clipboard', 'success')
   }
 
   const [isDragging, setIsDragging] = useState(false)
@@ -141,33 +144,50 @@ const HomeMain = ({ navigate }) => {
       <div className={styles.QuarterThree}>
         <div className={styles.heading}>
           <h2>Recently Copied</h2>
-          <div className={styles.viewAll}>
+          <div
+            className={styles.viewAll}
+            onClick={() => {
+              navigate('Clipboard')
+            }}
+          >
             <p>View All</p>
             <GoArrowRight />
           </div>
         </div>
         <div className={styles.cardWrapper}>
-          {recentlyCopied.map((item) => {
-            return (
-              <div className={styles.card} key={item.id}>
-                <p>{item.content}</p>
-                <div
-                  className={styles.copyBtn}
-                  onClick={() => {
-                    copyToClipboard(item.content)
-                  }}
-                >
-                  <MdCopyAll />
+          {clipBoard.length !== 0 ? (
+            clipBoard.slice(0, 3).map((item) => {
+              return (
+                <div className={styles.card} key={item.id}>
+                  <p>{item}</p>
+                  <div
+                    className={styles.copyBtn}
+                    onClick={() => {
+                      copyToClipboard(item)
+                    }}
+                  >
+                    <MdCopyAll />
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })
+          ) : (
+            <div className={styles.emptyCard}>
+              <FaInbox />
+              <p>No clips copied yet</p>
+            </div>
+          )}
         </div>
       </div>
       <div className={styles.QuarterThree}>
         <div className={styles.heading}>
           <h2>Recently Shared</h2>
-          <div className={styles.viewAll}>
+          <div
+            className={styles.viewAll}
+            onClick={() => {
+              navigate('Shared Files')
+            }}
+          >
             <p>View All</p>
             <GoArrowRight />
           </div>
