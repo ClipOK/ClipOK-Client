@@ -1,14 +1,10 @@
 import * as path from 'path'
-import { app, BrowserWindow, session } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import ClipboardWatcher from '../renderer/src/Reusables/Clipboard.js'
-import {
-  setCookie,
-  getCookie,
-  clearAllCookies,
-  deleteCookie
-} from '../renderer/src/Reusables/Cookies.js'
+import Store from 'electron-store'
 
 let mainWindow
+const storage = new Store()
 
 function createWindow() {
   let preloadScriptPath
@@ -54,6 +50,22 @@ function createWindow() {
       event.preventDefault()
       mainWindow.setSize(1280, 720)
     }
+  })
+
+  ipcMain.handle('getCookie', (event, name) => {
+    return storage.get(name)
+  })
+
+  ipcMain.handle('setCookie', (event, { name, value }) => {
+    storage.set(name, value)
+  })
+
+  ipcMain.handle('deleteCookie', (event, name) => {
+    storage.delete(name)
+  })
+
+  ipcMain.handle('clearAllCookies', () => {
+    storage.clear()
   })
 }
 

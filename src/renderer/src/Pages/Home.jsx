@@ -9,9 +9,6 @@ import { LuCrown } from 'react-icons/lu'
 import { IoSettingsOutline } from 'react-icons/io5'
 import { IoMdLogOut } from 'react-icons/io'
 import { RiMoneyRupeeCircleLine } from 'react-icons/ri'
-import { useRecoilState, useResetRecoilState } from 'recoil'
-import { loadingState } from '../GlobalStates/states.js'
-
 // Components
 import HomeMain from '../components/HomeMain'
 import MyDevices from '../components/MyDevices'
@@ -19,14 +16,30 @@ import Subscription from '../components/Subscription'
 import MyPlan from '../components/MyPlan'
 import Loader from '../components/Loader.jsx'
 import Settings from '../components/Settings.jsx'
-import Clipboard from '../components/Clipboard.jsx'
 import SharedFile from '../components/SharedFile.jsx'
 import ClipBoard from '../components/Clipboard.jsx'
+import Login from './Login.jsx'
+import { wait } from '../Reusables/data.js'
 
 const Home = () => {
-  const [loading, setLoading] = useRecoilState(loadingState)
-  const resetLoading = useResetRecoilState(loadingState)
+  const [loading, setLoading] = useState(true)
   const [active, setActive] = useState('Dashboard')
+  const [isLoginRequired, setLoginRequired] = useState(false)
+  useEffect(() => {
+    async function checkToken() {
+      await wait(2000)
+      if (await window.electronStore.getCookie('token')) {
+        console.log('Token found')
+        console.log(window.electronStore.getCookie('token'))
+        setLoginRequired(false)
+        setLoading(false)
+      } else {
+        setLoginRequired(true)
+        setLoading(false)
+      }
+    }
+    checkToken()
+  }, [])
   const ButtonData = [
     { id: 0, name: 'Dashboard', icon: <MdOutlineDashboard /> },
     { id: 1, name: 'Shared Files', icon: <RxShare1 /> },
@@ -63,33 +76,57 @@ const Home = () => {
   }
 
   return (
-    <div className={styles.main}>
-      {/* {loading && <Loader />} */}
-      <div className={styles.sidebar}>
-        <img src={logo} alt="Logo" />
-        {ButtonData.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className={
-                active === item.name
-                  ? `${styles.actionButton} ${styles.active}`
-                  : `${styles.actionButton}`
-              }
-              onClick={() => setActive(item.name)}
-            >
-              {item.icon}
-              <p>{item.name}</p>
-            </div>
-          )
-        })}
-        <div className={styles.logoutButton}>
-          <IoMdLogOut />
-          <p>Logout</p>
-        </div>
-      </div>
-      <div className={styles.rightMain}>{renderComponent()}</div>
-    </div>
+    <>
+      {isLoginRequired && (
+        <Login
+          redirect={() => {
+            setLoginRequired(false)
+          }}
+        />
+      )}
+      <>
+        {!isLoginRequired && (
+          <div className={styles.main}>
+            {loading ? (
+              <Loader />
+            ) : (
+              <>
+                <div className={styles.sidebar}>
+                  <img src={logo} alt="Logo" />
+                  {ButtonData.map((item) => {
+                    return (
+                      <div
+                        key={item.id}
+                        className={
+                          active === item.name
+                            ? `${styles.actionButton} ${styles.active}`
+                            : `${styles.actionButton}`
+                        }
+                        onClick={() => setActive(item.name)}
+                      >
+                        {item.icon}
+                        <p>{item.name}</p>
+                      </div>
+                    )
+                  })}
+                  <div
+                    className={styles.logoutButton}
+                    onClick={() => {
+                      window.electronStore.clearAllCookies()
+                      setLoginRequired(true)
+                    }}
+                  >
+                    <IoMdLogOut />
+                    <p>Logout</p>
+                  </div>
+                </div>
+                <div className={styles.rightMain}>{renderComponent()}</div>
+              </>
+            )}
+          </div>
+        )}
+      </>
+    </>
   )
 }
 

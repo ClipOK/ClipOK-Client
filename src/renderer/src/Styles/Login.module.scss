@@ -64,7 +64,7 @@ img {
 
         &:focus {
           outline: none;
-          border: 1px solid rgba(255, 255, 255, 0.323);
+          // border: 1px solid rgba(255, 255, 255, 0.323);
         }
       }
 
@@ -75,6 +75,7 @@ img {
         margin-top: 1rem;
         width: 55%;
         background-color: var(--color-dark);
+        transition: all 0.3s ease;
 
         > input {
           width: 100%;
@@ -93,7 +94,7 @@ img {
 
           &:focus {
             outline: none;
-            border: 1px solid rgba(255, 255, 255, 0.323);
+            // border: 1px solid rgba(255, 255, 255, 0.323);
           }
         }
 
@@ -185,6 +186,11 @@ img {
       justify-content: center;
       box-shadow: 5px 5px 0px 0 var(--color-primary-shadow);
       transition: all 0.15s ease;
+
+      > svg {
+        margin-left: 0.5rem;
+        font-size: 1.5rem;
+      }
 
       &:hover {
         cursor: pointer;

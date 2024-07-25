@@ -1,15 +1,60 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import axios from 'axios'
 import styles from '../Styles/Login.module.scss'
-import logo from '../assets/clipok-white.png'
-import { IoMdEyeOff, IoMdEye } from 'react-icons/io'
 import LoginArt from '../assets/login-art.svg'
+import logo from '../assets/clipok-white.png'
 import reviews from '../assets/reviews.png'
+import { IoLogInOutline } from 'react-icons/io5'
+import { IoMdEyeOff, IoMdEye } from 'react-icons/io'
+import { showToast } from '../Reusables/data.js'
+import { secrets } from '../Secrets'
 
-const Login = () => {
+const Login = ({ redirect }) => {
+  const divRef = useRef(null)
+  const { backendUrl } = secrets
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [loginData, setLoginData] = useState({ email: '', password: '' })
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
 
+  const login = async () => {
+    const options = {
+      method: 'POST',
+      url: `${backendUrl}/user/login`,
+      data: {
+        email: loginData.email,
+        password: loginData.password
+      }
+    }
+    const toast = showToast('Logging in...', 'loading')
+    axios(options)
+      .then(async (res) => {
+        setIsButtonDisabled(false)
+        if (res.data.status === 'Success') {
+          window.electronStore.setCookie('token', res.data.token)
+          if ((await window.electronStore.getCookie('token')) === res.data.token) {
+            redirect()
+          }
+          showToast('Logged in successfully', 'success', toast)
+        } else {
+          showToast(res.data.message, 'error', toast)
+        }
+      })
+      .catch((err) => {
+        setIsButtonDisabled(false)
+        showToast(err?.response?.data?.message || 'Something went wrong', 'error', toast)
+      })
+  }
+
+  const handleLogin = () => {
+    if (isButtonDisabled) return
+    if (loginData.email === '' || loginData.password === '') {
+      showToast('Please fill all the fields', 'error')
+    } else {
+      setIsButtonDisabled(true)
+      login()
+    }
+  }
   return (
     <div className={styles.main}>
       <div className={styles.left}>
@@ -24,12 +69,12 @@ const Login = () => {
             onChange={(e) => {
               setLoginData({ ...loginData, email: e.target.value })
             }}
-            placeholder="naman@gmail.com"
+            placeholder="aditya@gmail.com"
           />
         </div>
         <div className={styles.inputWrapper}>
           <p>Password</p>
-          <div className={styles.passwordWrapper}>
+          <div className={styles.passwordWrapper} ref={divRef}>
             <input
               type={showPassword ? 'text' : 'password'}
               value={loginData.password}
@@ -77,7 +122,9 @@ const Login = () => {
           </div>
           <p className={styles.forgotPassword}>Forgot Password?</p>
         </div>
-        <div className={styles.submitButton}>Login to CLIPOK</div>
+        <div className={styles.submitButton} onClick={handleLogin}>
+          Login to CLIPOK <IoLogInOutline />
+        </div>
         <p className={styles.newAccount}>
           Don't have an account? <span>Register Here</span>
         </p>

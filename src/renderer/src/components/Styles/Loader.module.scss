@@ -2,15 +2,27 @@
   height: 100vh;
   width: 100%;
   background-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1.5rem;
 
   .loader {
     width: 50px;
     aspect-ratio: 1;
     border-radius: 50%;
     border: 8px solid;
-    border-color: #ffffff #ffffff;
+    border-color: var(--color-primary) var(--card);
     animation: l1 1s infinite;
   }
+
+  > p {
+    color: white;
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
   @keyframes l1 {
     to {
       transform: rotate(0.5turn);

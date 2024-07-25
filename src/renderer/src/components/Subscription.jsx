@@ -10,7 +10,7 @@ import AfterPayment from './AfterPayment.jsx'
 
 const Subscription = () => {
   const { keyId } = secrets
-  const [showAfterPayment, setShowAfterPayment] = useState(true)
+  const [showAfterPayment, setShowAfterPayment] = useState(false)
   const [Razorpay] = useRazorpay()
 
   const verifySignature = async (signature, orderId, paymentId) => {
@@ -67,7 +67,7 @@ const Subscription = () => {
         address: 'Razorpay Corporate Office'
       },
       theme: {
-        color: '#3399cc'
+        color: '#ffc418'
       }
     }
 
@@ -81,7 +81,7 @@ const Subscription = () => {
     rzp1.open()
   }
 
-  const createOrder = async ({ amount, planId, email = 'mail@mail.com' }) => {
+  const createOrder = async ({ amount, planId, email = 'singhaditya1226@gmail.com' }) => {
     const options = {
       method: 'POST',
       url: 'http://localhost:3000/payment/create-payment/',

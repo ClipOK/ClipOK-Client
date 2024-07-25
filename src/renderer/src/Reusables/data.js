@@ -1,17 +1,22 @@
 import toast from 'react-hot-toast'
 
-export const showToast = (message, type) => {
+export const showToast = (message, type, id) => {
   switch (type) {
     case 'success':
-      toast.success(message)
-      break
+      return toast.success(message, { id })
     case 'error':
-      toast.error(message)
-      break
+      return toast.error(message, { id })
     case 'loading':
-      toast.loading(message)
-      break
+      return toast.loading(message, { id })
     default:
-      toast(message)
+      return toast(message, { id })
   }
+}
+
+export const toastPromise = (promise, options) => {
+  return toast.promise(promise, options)
+}
+
+export const wait = async (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
