@@ -15,6 +15,7 @@ import { FiSmartphone } from 'react-icons/fi'
 import { HiLocationMarker } from 'react-icons/hi'
 import { MdArrowOutward } from 'react-icons/md'
 import 'leaflet/dist/leaflet.css'
+import Transition from '../Transition'
 
 const MyDevices = () => {
   const [isDeviceEmpty, setIsDeviceEmpty] = useState(false)

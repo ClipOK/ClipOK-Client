@@ -20,26 +20,14 @@ import SharedFile from '../components/SharedFile.jsx'
 import ClipBoard from '../components/Clipboard.jsx'
 import Login from './Login.jsx'
 import { wait } from '../Reusables/data.js'
+import Transition from '../Transition.jsx'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [active, setActive] = useState('Dashboard')
-  const [isLoginRequired, setLoginRequired] = useState(false)
-  useEffect(() => {
-    async function checkToken() {
-      await wait(2000)
-      if (await window.electronStore.getCookie('token')) {
-        console.log('Token found')
-        console.log(window.electronStore.getCookie('token'))
-        setLoginRequired(false)
-        setLoading(false)
-      } else {
-        setLoginRequired(true)
-        setLoading(false)
-      }
-    }
-    checkToken()
-  }, [])
+
   const ButtonData = [
     { id: 0, name: 'Dashboard', icon: <MdOutlineDashboard /> },
     { id: 1, name: 'Shared Files', icon: <RxShare1 /> },
@@ -59,75 +47,56 @@ const Home = () => {
       case 'Dashboard':
         return <HomeMain navigate={handleNavigation} />
       case 'Shared Files':
-        return <SharedFile />
+        return <SharedFile navigate={handleNavigation} />
       case 'Clipboard':
-        return <ClipBoard />
+        return <ClipBoard navigate={handleNavigation} />
       case 'My Device':
-        return <MyDevices />
+        return <MyDevices navigate={handleNavigation} />
       case 'Subscriptions':
-        return <Subscription />
+        return <Subscription navigate={handleNavigation} />
       case 'My Plan':
-        return <MyPlan />
+        return <MyPlan navigate={handleNavigation} />
       case 'Settings':
-        return <Settings />
+        return <Settings navigate={handleNavigation} />
       default:
-        return <HomeMain />
+        return <HomeMain navigate={handleNavigation} />
     }
   }
 
   return (
-    <>
-      {isLoginRequired && (
-        <Login
-          redirect={() => {
-            setLoginRequired(false)
+    <div className={styles.main}>
+      <div className={styles.sidebar}>
+        <img src={logo} alt="Logo" />
+        {ButtonData.map((item) => {
+          return (
+            <div
+              key={item.id}
+              className={
+                active === item.name
+                  ? `${styles.actionButton} ${styles.active}`
+                  : `${styles.actionButton}`
+              }
+              onClick={() => setActive(item.name)}
+            >
+              {item.icon}
+              <p>{item.name}</p>
+            </div>
+          )
+        })}
+        <div
+          className={styles.logoutButton}
+          onClick={() => {
+            window.electronStore.clearAllCookies()
+            navigate('/')
           }}
-        />
-      )}
-      <>
-        {!isLoginRequired && (
-          <div className={styles.main}>
-            {loading ? (
-              <Loader />
-            ) : (
-              <>
-                <div className={styles.sidebar}>
-                  <img src={logo} alt="Logo" />
-                  {ButtonData.map((item) => {
-                    return (
-                      <div
-                        key={item.id}
-                        className={
-                          active === item.name
-                            ? `${styles.actionButton} ${styles.active}`
-                            : `${styles.actionButton}`
-                        }
-                        onClick={() => setActive(item.name)}
-                      >
-                        {item.icon}
-                        <p>{item.name}</p>
-                      </div>
-                    )
-                  })}
-                  <div
-                    className={styles.logoutButton}
-                    onClick={() => {
-                      window.electronStore.clearAllCookies()
-                      setLoginRequired(true)
-                    }}
-                  >
-                    <IoMdLogOut />
-                    <p>Logout</p>
-                  </div>
-                </div>
-                <div className={styles.rightMain}>{renderComponent()}</div>
-              </>
-            )}
-          </div>
-        )}
-      </>
-    </>
+        >
+          <IoMdLogOut />
+          <p>Logout</p>
+        </div>
+      </div>
+      <div className={styles.rightMain}>{renderComponent()}</div>
+    </div>
   )
 }
 
-export default Home
+export default Transition(Home)

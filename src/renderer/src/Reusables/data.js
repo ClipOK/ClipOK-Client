@@ -13,6 +13,10 @@ export const showToast = (message, type, id) => {
   }
 }
 
+export const dismissToast = (id) => {
+  toast.dismiss(id)
+}
+
 export const toastPromise = (promise, options) => {
   return toast.promise(promise, options)
 }

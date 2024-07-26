@@ -6,6 +6,7 @@ import { clipBoardState } from '../GlobalStates/states.js' // Added the clipBoar
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { MdOutlineContentCopy } from 'react-icons/md'
 import { Tooltip } from 'react-tooltip'
+import Transition from '../Transition.jsx'
 
 const ClipBoard = () => {
   const [clipBoard, setClipBoard] = useRecoilState(clipBoardState)

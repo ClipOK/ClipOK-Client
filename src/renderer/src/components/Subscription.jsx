@@ -5,13 +5,15 @@ import { IoIosCheckmarkCircle } from 'react-icons/io'
 import { IoMdStarOutline } from 'react-icons/io'
 import axios from 'axios'
 import { secrets } from '../Secrets'
-import { showToast } from '../Reusables/data'
+import { showToast, dismissToast } from '../Reusables/data'
 import AfterPayment from './AfterPayment.jsx'
+import Transition from '../Transition.jsx'
 
 const Subscription = () => {
   const { keyId } = secrets
   const [showAfterPayment, setShowAfterPayment] = useState(false)
   const [Razorpay] = useRazorpay()
+  const [toast, setToast] = useState(null)
 
   const verifySignature = async (signature, orderId, paymentId) => {
     const options = {
@@ -75,13 +77,19 @@ const Subscription = () => {
 
     rzp1.on('payment.failed', function (response) {
       console.log('Payment Failed')
-      showToast('Payment Failed', 'error')
+      console.log(response)
+      showToast('Payment Failed', 'error', 1)
     })
 
     rzp1.open()
+    showToast('Proceed with Razorpay', 'success', 1)
   }
 
-  const createOrder = async ({ amount, planId, email = 'singhaditya1226@gmail.com' }) => {
+  const createOrder = async ({ amount, planId }) => {
+    const email = await window.electronStore.getCookie('email')
+    console.log(email)
+    if (!email) return
+    showToast('Creating Payment', 'loading', 1)
     const options = {
       method: 'POST',
       url: 'http://localhost:3000/payment/create-payment/',
@@ -95,7 +103,6 @@ const Subscription = () => {
         planId
       }
     }
-
     axios(options)
       .then((response) => {
         console.log(response.data)
@@ -104,6 +111,8 @@ const Subscription = () => {
       })
       .catch((error) => {
         console.error(error)
+        window.alert(error)
+        showToast('Some Error Occured', 'error', 1)
       })
   }
 

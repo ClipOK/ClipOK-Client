@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import styles from './Styles/MyPlan.module.scss'
 import empty from '../assets/empty.svg'
-import { IoAddCircleOutline } from 'react-icons/io5'
 import { LuCrown } from 'react-icons/lu'
 import { BiCheckCircle } from 'react-icons/bi'
 import { IoMdStarOutline } from 'react-icons/io'
 import { IoHourglassOutline } from 'react-icons/io5'
 import { MdOutlinePayments } from 'react-icons/md'
 
-const MyPlan = () => {
+const MyPlan = ({ navigate }) => {
   const [isPlanEmpty, setIsPlanEmpty] = useState(false)
   const [activePlan, setActivePlan] = useState({
     planId: 0,
@@ -92,7 +91,12 @@ const MyPlan = () => {
                     <p>Expiry on {activePlan.planExpiry}</p>
                   )}
                 </div>
-                <div className={styles.upgradePlan}>
+                <div
+                  className={styles.upgradePlan}
+                  onClick={() => {
+                    navigate('Subscriptions')
+                  }}
+                >
                   <MdOutlinePayments />
                   <p>Upgrade Plan</p>
                 </div>

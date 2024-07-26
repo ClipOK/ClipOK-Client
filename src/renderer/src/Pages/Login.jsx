@@ -6,11 +6,14 @@ import logo from '../assets/clipok-white.png'
 import reviews from '../assets/reviews.png'
 import { IoLogInOutline } from 'react-icons/io5'
 import { IoMdEyeOff, IoMdEye } from 'react-icons/io'
-import { showToast } from '../Reusables/data.js'
+import { showToast, wait } from '../Reusables/data.js'
 import { secrets } from '../Secrets'
+import Transition from '../Transition.jsx'
+import { useNavigate } from 'react-router-dom'
 
-const Login = ({ redirect }) => {
+const Login = () => {
   const divRef = useRef(null)
+  const navigate = useNavigate()
   const { backendUrl } = secrets
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
@@ -32,10 +35,12 @@ const Login = ({ redirect }) => {
         setIsButtonDisabled(false)
         if (res.data.status === 'Success') {
           window.electronStore.setCookie('token', res.data.token)
+          window.electronStore.setCookie('email', loginData.email)
           if ((await window.electronStore.getCookie('token')) === res.data.token) {
-            redirect()
+            showToast('Logged in successfully', 'success', toast)
+            await wait(1000)
+            navigate('/home')
           }
-          showToast('Logged in successfully', 'success', toast)
         } else {
           showToast(res.data.message, 'error', toast)
         }
@@ -126,7 +131,14 @@ const Login = ({ redirect }) => {
           Login to CLIPOK <IoLogInOutline />
         </div>
         <p className={styles.newAccount}>
-          Don't have an account? <span>Register Here</span>
+          Don't have an account?{' '}
+          <span
+            onClick={() => {
+              navigate('/register')
+            }}
+          >
+            Register Here
+          </span>
         </p>
       </div>
       <div className={styles.right}>
@@ -143,4 +155,4 @@ const Login = ({ redirect }) => {
   )
 }
 
-export default Login
+export default Transition(Login)

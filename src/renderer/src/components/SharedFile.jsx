@@ -3,6 +3,7 @@ import styles from './Styles/SharedFile.module.scss'
 import empty from '../assets/empty.svg'
 import { IoMdRefresh } from 'react-icons/io'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import Transition from '../Transition'
 
 const SharedFile = () => {
   const [files, setFiles] = useState([])

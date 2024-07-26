@@ -1,12 +1,29 @@
 import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
-import Home from './Pages/Home.jsx'
+import Index from './Pages/Index.jsx'
 import Login from './Pages/Login.jsx'
+import Signup from './Pages/Signup.jsx'
+import Home from './Pages/Home.jsx'
 import './Styles/globals.scss'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { RecoilRoot } from 'recoil'
 import { Toaster } from 'react-hot-toast'
 import { initConnection } from './Socket/functions.js'
+import { AnimatePresence } from 'framer-motion'
+
+const AppChild = () => {
+  const location = useLocation()
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Index />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Signup />} />
+      </Routes>
+    </AnimatePresence>
+  )
+}
 
 const App = () => {
   useEffect(() => {
@@ -50,8 +67,7 @@ const App = () => {
       <Toaster position="bottom-right" />
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/*" element={<AppChild />} />
         </Routes>
       </Router>
     </RecoilRoot>

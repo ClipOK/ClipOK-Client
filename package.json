@@ -25,6 +25,7 @@
     "electron-is-dev": "^3.0.1",
     "electron-store": "^10.0.0",
     "electron-updater": "^6.1.7",
+    "framer-motion": "^11.3.17",
     "google-map-react": "^2.2.1",
     "js-cookie": "^3.0.5",
     "leaflet": "^1.9.4",

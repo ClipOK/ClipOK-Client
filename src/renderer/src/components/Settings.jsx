@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './Styles/Settings.module.scss'
 import { IoMdArrowRoundForward } from 'react-icons/io'
+import Transition from '../Transition'
 
 const Settings = () => {
   const [user, setUser] = useState({
