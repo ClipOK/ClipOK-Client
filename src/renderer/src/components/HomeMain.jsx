@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import styles from './Styles/HomeMain.module.scss'
-import Cookies from 'js-cookie'
 import { MdContentCopy } from 'react-icons/md'
 import { MdCopyAll } from 'react-icons/md'
 import { GoArrowRight } from 'react-icons/go'
@@ -12,13 +11,24 @@ import { MdOutlineDownloading } from 'react-icons/md'
 import { RxOpenInNewWindow } from 'react-icons/rx'
 import { LuFilePieChart } from 'react-icons/lu'
 import socket from '../Socket/socket.js'
-import { sendClips } from '../Socket/functions.js'
 import { clipBoardState } from '../GlobalStates/states.js'
 import { useRecoilState } from 'recoil'
 import { FaInbox } from 'react-icons/fa'
 
 const HomeMain = ({ navigate }) => {
   const [clipBoard, setClipBoard] = useRecoilState(clipBoardState)
+  const [fileLimit, setFileLimit] = useState('500MB')
+  useEffect(() => {
+    const getPlanId = async () => {
+      const planId = await window.electronStore.getCookie('planId')
+      if (planId === 1) {
+        setFileLimit('1GB')
+      } else if (planId === 2) {
+        setFileLimit('5GB')
+      }
+    }
+    getPlanId()
+  }, [])
   const [recentlyCopied, setRecentlyCopied] = useState([
     {
       id: 1,
@@ -130,7 +140,7 @@ const HomeMain = ({ navigate }) => {
         >
           <LuFileUp />
           <p>Select any file or Drag & Drop</p>
-          <p>Upto 500MB</p>
+          <p>Upto {fileLimit}</p>
           <input
             type="file"
             onChange={(e) => {

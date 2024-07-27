@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styles from './Styles/MyPlan.module.scss'
 import empty from '../assets/empty.svg'
-import { LuCrown } from 'react-icons/lu'
 import { BiCheckCircle } from 'react-icons/bi'
-import { IoMdStarOutline } from 'react-icons/io'
 import { IoHourglassOutline } from 'react-icons/io5'
 import { MdOutlinePayments } from 'react-icons/md'
 
@@ -19,6 +17,8 @@ const MyPlan = ({ navigate }) => {
   const [plans, setPlans] = useState([
     {
       id: 0,
+      name: 'Free',
+      title: 'General Usage',
       features: [
         '1 Desktop Device Supported',
         '30 Items / Clipboard',
@@ -28,6 +28,8 @@ const MyPlan = ({ navigate }) => {
     },
     {
       id: 1,
+      name: 'Basic',
+      title: 'Suitable for Personal Use',
       features: [
         '2 Desktop Devices Supported',
         '100 Items / Clipboard',
@@ -37,6 +39,8 @@ const MyPlan = ({ navigate }) => {
     },
     {
       id: 2,
+      name: 'Premium',
+      title: 'Suitable for Teams',
       features: [
         '4 Desktop Devices supported',
         '200 Items / Clipboard',

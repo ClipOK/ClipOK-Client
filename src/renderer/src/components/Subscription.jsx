@@ -7,26 +7,30 @@ import axios from 'axios'
 import { secrets } from '../Secrets'
 import { showToast, dismissToast } from '../Reusables/data'
 import AfterPayment from './AfterPayment.jsx'
-import Transition from '../Transition.jsx'
+import { useRecoilState } from 'recoil'
+import { token } from '../GlobalStates/states.js'
 
 const Subscription = () => {
   const { keyId } = secrets
+  const [tokenState, setTokenState] = useRecoilState(token)
   const [showAfterPayment, setShowAfterPayment] = useState(false)
   const [Razorpay] = useRazorpay()
   const [toast, setToast] = useState(null)
 
-  const verifySignature = async (signature, orderId, paymentId) => {
+  const verifySignature = async (signature, orderId, paymentId, planId) => {
     const options = {
       method: 'POST',
       url: 'http://localhost:3000/payment/verify-payment/',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer `
+        Authorization: `Bearer ${tokenState}`
       },
       data: {
         razorpayPaymentId: paymentId,
         razorpayOrderId: orderId,
-        razorpaySignature: signature
+        razorpaySignature: signature,
+        planId: planId,
+        email: await window.electronStore.getCookie('email')
       }
     }
 
@@ -43,7 +47,7 @@ const Subscription = () => {
       })
   }
 
-  const handlePayment = async ({ id, amount }) => {
+  const handlePayment = async ({ id, amount }, planId) => {
     console.log(id, amount)
     const options = {
       key: keyId,
@@ -57,7 +61,8 @@ const Subscription = () => {
         verifySignature(
           response.razorpay_signature,
           response.razorpay_order_id,
-          response.razorpay_payment_id
+          response.razorpay_payment_id,
+          planId
         )
       },
       prefill: {
@@ -95,7 +100,7 @@ const Subscription = () => {
       url: 'http://localhost:3000/payment/create-payment/',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer `
+        Authorization: `Bearer ${tokenState}`
       },
       data: {
         amount,
@@ -107,7 +112,7 @@ const Subscription = () => {
       .then((response) => {
         console.log(response.data)
         const { data } = response.data
-        handlePayment(data)
+        handlePayment(data, planId)
       })
       .catch((error) => {
         console.error(error)

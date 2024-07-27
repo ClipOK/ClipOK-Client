@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import styles from '../Styles/Home.module.scss'
 import logo from '../assets/clipok-white.png'
 import { MdOutlineDashboard } from 'react-icons/md'
@@ -14,18 +14,14 @@ import HomeMain from '../components/HomeMain'
 import MyDevices from '../components/MyDevices'
 import Subscription from '../components/Subscription'
 import MyPlan from '../components/MyPlan'
-import Loader from '../components/Loader.jsx'
 import Settings from '../components/Settings.jsx'
 import SharedFile from '../components/SharedFile.jsx'
 import ClipBoard from '../components/Clipboard.jsx'
-import Login from './Login.jsx'
-import { wait } from '../Reusables/data.js'
 import Transition from '../Transition.jsx'
 import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
   const [active, setActive] = useState('Dashboard')
 
   const ButtonData = [
@@ -85,8 +81,9 @@ const Home = () => {
         })}
         <div
           className={styles.logoutButton}
-          onClick={() => {
-            window.electronStore.clearAllCookies()
+          onClick={async () => {
+            await window.electronStore.clearAllCookies()
+            console.log('Cookies cleared')
             navigate('/')
           }}
         >

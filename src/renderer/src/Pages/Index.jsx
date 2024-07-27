@@ -14,7 +14,6 @@ const Index = () => {
         setComponent(<Login />)
       }
     }
-
     checkToken()
   }, [])
 

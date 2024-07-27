@@ -19,3 +19,8 @@ export const clipBoardState = atom({
   key: 'clipBoardState',
   default: []
 })
+
+export const token = atom({
+  key: 'token',
+  default: ''
+})
