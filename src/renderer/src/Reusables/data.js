@@ -24,3 +24,23 @@ export const toastPromise = (promise, options) => {
 export const wait = async (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
+
+export const epochToDateLocale = (epoch, type) => {
+  let date
+  if (type == 'ms') {
+    date = new Date(epoch)
+  } else if (type == 's') {
+    date = new Date(epoch * 1000)
+  } else if (!type) {
+    throw new Error('Type expected')
+  } else {
+    throw new Error('Invalid type')
+  }
+  const options = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }
+  const formattedDate = date.toLocaleDateString('en-IN', options)
+  return formattedDate
+}

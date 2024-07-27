@@ -24,3 +24,8 @@ export const token = atom({
   key: 'token',
   default: ''
 })
+
+export const userPlan = atom({
+  key: 'userPlan',
+  default: {}
+})

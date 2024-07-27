@@ -2,25 +2,24 @@ import React, { useState, useEffect } from 'react'
 import useRazorpay from 'react-razorpay'
 import styles from './Styles/Subscription.module.scss'
 import { IoIosCheckmarkCircle } from 'react-icons/io'
-import { IoMdStarOutline } from 'react-icons/io'
 import axios from 'axios'
 import { secrets } from '../Secrets'
 import { showToast, dismissToast } from '../Reusables/data'
 import AfterPayment from './AfterPayment.jsx'
-import { useRecoilState } from 'recoil'
-import { token } from '../GlobalStates/states.js'
+
+const tokenState = await window.electronStore.getCookie('token')
+const planId = await window.electronStore.getCookie('planId')
 
 const Subscription = () => {
   const { keyId } = secrets
-  const [tokenState, setTokenState] = useRecoilState(token)
+  const { backendUrl } = secrets
   const [showAfterPayment, setShowAfterPayment] = useState(false)
   const [Razorpay] = useRazorpay()
-  const [toast, setToast] = useState(null)
 
   const verifySignature = async (signature, orderId, paymentId, planId) => {
     const options = {
       method: 'POST',
-      url: 'http://localhost:3000/payment/verify-payment/',
+      url: `${backendUrl}/payment/verify-payment/`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${tokenState}`
@@ -92,12 +91,12 @@ const Subscription = () => {
 
   const createOrder = async ({ amount, planId }) => {
     const email = await window.electronStore.getCookie('email')
-    console.log(email)
+    console.log(tokenState)
     if (!email) return
     showToast('Creating Payment', 'loading', 1)
     const options = {
       method: 'POST',
-      url: 'http://localhost:3000/payment/create-payment/',
+      url: `${backendUrl}/payment/create-payment/`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${tokenState}`
@@ -160,6 +159,10 @@ const Subscription = () => {
     }
   ])
 
+  useEffect(() => {
+    console.log(planId)
+  }, [])
+
   return (
     <div className={styles.main}>
       {showAfterPayment && <AfterPayment />}
@@ -177,25 +180,37 @@ const Subscription = () => {
                     <span>₹</span>
                     {plan.price}
                   </p>
-                  {
-                    // If the plan is free, display a message
-                    plan.price === 0 ? (
-                      <p className={styles.perMonth}>Free Forever</p>
-                    ) : (
-                      <p className={styles.perMonth}>/month</p>
-                    )
-                  }
-                  <div
-                    className={styles.buttonPurchase}
-                    onClick={() => {
-                      createOrder({
-                        planId: plan.id,
-                        amount: plan.price
-                      })
-                    }}
-                  >
-                    Subscribe
-                  </div>
+                  {plan.price === 0 ? (
+                    <p className={styles.perMonth}>Free Forever</p>
+                  ) : (
+                    <p className={styles.perMonth}>/month</p>
+                  )}
+                  {planId == plan.id ? (
+                    <div
+                      className={styles.buttonPurchase}
+                      onClick={() => {
+                        createOrder({
+                          planId: plan.id,
+                          amount: plan.price
+                        })
+                      }}
+                    >
+                      Active Plan
+                    </div>
+                  ) : (
+                    <div
+                      className={styles.buttonPurchase}
+                      onClick={() => {
+                        createOrder({
+                          planId: plan.id,
+                          amount: plan.price
+                        })
+                      }}
+                    >
+                      Subscribe
+                    </div>
+                  )}
+
                   <div className={styles.featuresWrapper}>
                     <p>Features</p>
                     {plan.features.map((feature, index) => {

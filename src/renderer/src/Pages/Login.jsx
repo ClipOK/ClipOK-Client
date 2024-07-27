@@ -10,13 +10,10 @@ import { showToast, wait } from '../Reusables/data.js'
 import { secrets } from '../Secrets'
 import Transition from '../Transition.jsx'
 import { useNavigate } from 'react-router-dom'
-import { token } from '../GlobalStates/states.js'
-import { useRecoilState } from 'recoil'
 
 const Login = () => {
   const divRef = useRef(null)
   const navigate = useNavigate()
-  const [tokenState, setToken] = useRecoilState(token)
   const { backendUrl } = secrets
   const [rememberMe, setRememberMe] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
@@ -37,11 +34,10 @@ const Login = () => {
       .then(async (res) => {
         setIsButtonDisabled(false)
         if (res.data.status === 'Success') {
-          setToken(res.data.token)
-          window.electronStore.setCookie('token', res.data.token)
-          window.electronStore.setCookie('email', loginData.email)
-          window.electronStore.setCookie('planId', res.data.planId)
-          if ((await window.electronStore.getCookie('token')) === res.data.token) {
+          await window.electronStore.setCookie('token', res.data.token)
+          await window.electronStore.setCookie('email', res.data.email)
+          await window.electronStore.setCookie('planId', res.data.planId)
+          if ((await window.electronStore.getCookie('email')) === res.data.email) {
             showToast('Logged in successfully', 'success', toast)
             await wait(1000)
             navigate('/home')

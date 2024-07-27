@@ -59,6 +59,15 @@ const Home = () => {
     }
   }
 
+  const logOut = async () => {
+    try {
+      await window.electronStore.clearAllCookies()
+      navigate('/')
+    } catch (error) {
+      console.error('Navigation failed:', error)
+    }
+  }
+
   return (
     <div className={styles.main}>
       <div className={styles.sidebar}>
@@ -79,14 +88,7 @@ const Home = () => {
             </div>
           )
         })}
-        <div
-          className={styles.logoutButton}
-          onClick={async () => {
-            await window.electronStore.clearAllCookies()
-            console.log('Cookies cleared')
-            navigate('/')
-          }}
-        >
+        <div className={styles.logoutButton} onClick={logOut}>
           <IoMdLogOut />
           <p>Logout</p>
         </div>

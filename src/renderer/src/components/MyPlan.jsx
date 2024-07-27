@@ -4,16 +4,53 @@ import empty from '../assets/empty.svg'
 import { BiCheckCircle } from 'react-icons/bi'
 import { IoHourglassOutline } from 'react-icons/io5'
 import { MdOutlinePayments } from 'react-icons/md'
+import axios from 'axios'
+import { useRecoilState } from 'recoil'
+import { userPlan } from '../GlobalStates/states.js'
+import { secrets } from '../Secrets.js'
+import { epochToDateLocale } from '../Reusables/data.js'
+
+const email = await window.electronStore.getCookie('email')
+const tokenState = await window.electronStore.getCookie('token')
 
 const MyPlan = ({ navigate }) => {
+  const { backendUrl } = secrets
+  const [plan, setPlan] = useRecoilState(userPlan)
   const [isPlanEmpty, setIsPlanEmpty] = useState(false)
   const [activePlan, setActivePlan] = useState({
     planId: 0,
     name: 'Free',
     title: 'General Usage',
-    planExpiry: '29th April, 2024',
+    expiry: '29th April, 2024',
     price: 0
   })
+
+  const getPlanDetails = async () => {
+    const options = {
+      method: 'GET',
+      url: `${backendUrl}/user/plan-details/?email=${email}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tokenState}`
+      }
+    }
+
+    axios(options)
+      .then((response) => {
+        if (response.data.status === 'ok') {
+          setIsPlanEmpty(false)
+          setActivePlan(response.data.plan)
+          setPlan(response.data.plan)
+        } else {
+          setIsPlanEmpty(true)
+        }
+      })
+      .catch((error) => {
+        console.error(error)
+        setIsPlanEmpty(true)
+      })
+  }
+
   const [plans, setPlans] = useState([
     {
       id: 0,
@@ -50,6 +87,14 @@ const MyPlan = ({ navigate }) => {
     }
   ])
 
+  useEffect(() => {
+    if (Object.keys(plan).length === 0) {
+      getPlanDetails()
+    } else {
+      setActivePlan(plan)
+    }
+  }, [])
+
   return (
     <div className={styles.main}>
       <h2>My Plan</h2>
@@ -65,7 +110,7 @@ const MyPlan = ({ navigate }) => {
             <div className={styles.upperHeading}>
               <div className={styles.heading}>
                 <h2>{activePlan.name}</h2>
-                <p>{activePlan.title}</p>
+                <p>{plans[activePlan.planId].title}</p>
               </div>
               <div className={styles.planIndicator}>
                 <p>Active</p>
@@ -92,7 +137,7 @@ const MyPlan = ({ navigate }) => {
                   {activePlan.planId === 0 ? (
                     <p>This plan is Free Forever</p>
                   ) : (
-                    <p>Expiry on {activePlan.planExpiry}</p>
+                    <p>Expiry on {epochToDateLocale(activePlan.expiry, 'ms')}</p>
                   )}
                 </div>
                 <div
