@@ -10,6 +10,7 @@ import { RecoilRoot } from 'recoil'
 import { Toaster } from 'react-hot-toast'
 import { initConnection } from './Socket/functions.js'
 import { AnimatePresence } from 'framer-motion'
+import ClipboardListener from './components/ClipboardListener.jsx'
 
 const AppChild = () => {
   const location = useLocation()
@@ -30,9 +31,7 @@ const App = () => {
     initConnection()
   }, [])
   useEffect(() => {
-    // Function to prevent drag start
     const preventDragStart = (e) => e.preventDefault()
-
     const addListenersToImages = () => {
       const images = document.querySelectorAll('img')
       images.forEach((image) => {
@@ -64,6 +63,7 @@ const App = () => {
 
   return (
     <RecoilRoot>
+      <ClipboardListener /> 
       <Toaster position="bottom-right" />
       <Router>
         <Routes>

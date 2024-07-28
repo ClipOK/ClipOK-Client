@@ -4,7 +4,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 ipcRenderer.setMaxListeners(20)
 contextBridge.exposeInMainWorld('electron', {
   onClipboardChanged: (callback) =>
-    ipcRenderer.on('clipboard-changed', (event, newText) => callback(newText)),
+    ipcRenderer.on('text-changed', (event, newText) => callback(newText)),
   onImageChanged: (callback) =>
     ipcRenderer.on('image-changed', (event, newImage) => callback(newImage))
 })

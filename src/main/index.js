@@ -2,6 +2,7 @@ import * as path from 'path'
 import { app, BrowserWindow, ipcMain } from 'electron'
 import ClipboardWatcher from '../renderer/src/Reusables/Clipboard.js'
 import Store from 'electron-store'
+import { Notification } from 'electron'
 
 let mainWindow
 const storage = new Store()
@@ -32,19 +33,20 @@ function createWindow() {
   const clipboardWatcher = new ClipboardWatcher(
     200,
     (newText) => {
-      mainWindow.webContents.send('clipboard-changed', newText)
+      mainWindow.webContents.send('text-changed', newText)
     },
     (newImage) => {
       mainWindow.webContents.send('image-changed', newImage.toDataURL())
     }
   )
 
+  clipboardWatcher.startWatching()
+
   mainWindow.on('closed', () => {
     clipboardWatcher.stopWatching()
     mainWindow = null
   })
 
-  // Handle will-resize event to enforce size constraints
   mainWindow.on('will-resize', (event, newBounds) => {
     if (!mainWindow.isMaximized() && (newBounds.width !== 1280 || newBounds.height !== 720)) {
       event.preventDefault()
