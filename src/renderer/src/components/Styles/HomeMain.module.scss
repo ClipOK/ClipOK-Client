@@ -224,6 +224,7 @@
       overflow: auto;
       -ms-overflow-style: none; /* IE and Edge */
       scrollbar-width: none; /* Firefox */
+
       &::-webkit-scrollbar {
         display: none;
       }
@@ -263,6 +264,13 @@
         align-items: center;
         justify-content: space-between;
         border-radius: 0.75rem;
+        overflow: hidden;
+
+        > img {
+          width: 20%;
+          border-radius: 0.5rem;
+          object-fit: cover;
+        }
 
         > .fileDataWrapper {
           display: flex;
@@ -298,6 +306,10 @@
           color: white;
           font-size: 1rem;
           font-weight: 600;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          width: 80%;
         }
 
         > .copyBtn {

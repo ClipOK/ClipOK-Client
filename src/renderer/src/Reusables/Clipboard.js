@@ -24,7 +24,7 @@ class ClipboardWatcher extends EventEmitter {
       if (currentText && currentText !== this.lastText) {
         this.lastText = currentText
         this.emit('text-changed', currentText)
-        this.showNotification('Clipboard Text Changed', currentText)
+        this.showNotification('New Text Copied', currentText)
         if (this.onTextChange) {
           this.onTextChange(currentText)
         }
@@ -39,10 +39,7 @@ class ClipboardWatcher extends EventEmitter {
         this.lastImage = currentImage
         this.lastImageSize = currentImageSize
         this.emit('image-changed', currentImage)
-        this.showNotification(
-          'Clipboard Image Changed',
-          'An image has been copied to the clipboard.'
-        )
+        this.showNotification('New Image Copied', 'View')
         if (this.onImageChange) {
           this.onImageChange(currentImage)
         }

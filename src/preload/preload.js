@@ -1,12 +1,20 @@
+import { ipcRenderer, contextBridge } from 'electron'
 console.log('Preload script is running')
-import { contextBridge, ipcRenderer } from 'electron'
-
 ipcRenderer.setMaxListeners(20)
+
 contextBridge.exposeInMainWorld('electron', {
-  onClipboardChanged: (callback) =>
-    ipcRenderer.on('text-changed', (event, newText) => callback(newText)),
-  onImageChanged: (callback) =>
-    ipcRenderer.on('image-changed', (event, newImage) => callback(newImage))
+  onClipboardChanged: (callback) => {
+    console.log('Setting up clipboard changed listener')
+    ipcRenderer.on('text-changed', (event, newText) => {
+      callback(newText)
+    })
+  },
+  onImageChanged: (callback) => {
+    console.log('Setting up image changed listener')
+    ipcRenderer.on('image-changed', (event, newImage) => {
+      callback(newImage)
+    })
+  }
 })
 
 contextBridge.exposeInMainWorld('electronStore', {

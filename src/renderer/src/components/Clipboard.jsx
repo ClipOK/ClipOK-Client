@@ -2,15 +2,18 @@ import React, { useEffect, useState } from 'react'
 import styles from './Styles/Clipboard.module.scss'
 import empty from '../assets/empty.svg'
 import { useRecoilState, useResetRecoilState } from 'recoil'
-import { clipBoardState } from '../GlobalStates/states.js' // Added the clipBoardState atom
+import { clipsState } from '../GlobalStates/states.js' // Added the clipBoardState atom
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { MdOutlineContentCopy } from 'react-icons/md'
 import { Tooltip } from 'react-tooltip'
-import Transition from '../Transition.jsx'
 
 const ClipBoard = () => {
-  const [clipBoard, setClipBoard] = useRecoilState(clipBoardState)
-  const resetClipBoard = useResetRecoilState(clipBoardState)
+  const [combinedClipsState, setCombinedClips] = useRecoilState(clipsState)
+  const resetClipBoard = useResetRecoilState(clipsState)
+
+  const isImageDataUrl = (dataUrl) => {
+    return dataUrl.startsWith('data:image/') && dataUrl.length > 'data:image/'.length
+  }
 
   return (
     <div className={styles.main}>
@@ -33,16 +36,16 @@ const ClipBoard = () => {
           />
         </div>
       </div>
-      {clipBoard.length === 0 ? (
+      {combinedClipsState.length === 0 ? (
         <div className={styles.empty}>
           <img src={empty} alt="" />
           <p>No clips copied yet</p>
         </div>
       ) : (
         <div className={styles.itemWrapper}>
-          {clipBoard.map((item, index) => (
+          {combinedClipsState.map((item, index) => (
             <div key={index} className={styles.clipItem}>
-              <p>{item}</p>
+              {isImageDataUrl(item) ? <img src={item} alt="<Image Data>" /> : <p>{item}</p>}
               <div className={styles.btn}>
                 <div className={styles.copy}>
                   <MdOutlineContentCopy
@@ -56,7 +59,7 @@ const ClipBoard = () => {
                 <div
                   className={styles.delete}
                   onClick={() => {
-                    setClipBoard(clipBoard.filter((_, i) => i !== index))
+                    setCombinedClips(combinedClipsState.filter((_, i) => i !== index))
                   }}
                 >
                   <RiDeleteBin6Line />

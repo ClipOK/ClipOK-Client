@@ -37,6 +37,7 @@ const Login = () => {
           await window.electronStore.setCookie('token', res.data.token)
           await window.electronStore.setCookie('email', res.data.email)
           await window.electronStore.setCookie('planId', res.data.planId)
+          await window.electronStore.setCookie('name', res.data.name)
           if ((await window.electronStore.getCookie('email')) === res.data.email) {
             showToast('Logged in successfully', 'success', toast)
             await wait(1000)

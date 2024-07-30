@@ -62,6 +62,7 @@ const Home = () => {
   const logOut = async () => {
     try {
       await window.electronStore.clearAllCookies()
+      console.log('Logged out successfully')
       navigate('/')
     } catch (error) {
       console.error('Navigation failed:', error)

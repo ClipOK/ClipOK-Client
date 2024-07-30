@@ -11,12 +11,14 @@ import { MdOutlineDownloading } from 'react-icons/md'
 import { RxOpenInNewWindow } from 'react-icons/rx'
 import { LuFilePieChart } from 'react-icons/lu'
 import socket from '../Socket/socket.js'
-import { clipBoardState } from '../GlobalStates/states.js'
+import { clipsState } from '../GlobalStates/states.js'
 import { useRecoilState } from 'recoil'
 import { FaInbox } from 'react-icons/fa'
 
+const name = await window.electronStore.getCookie('name')
+
 const HomeMain = ({ navigate }) => {
-  const [clipBoard, setClipBoard] = useRecoilState(clipBoardState)
+  const [clipBoard, setClipBoard] = useRecoilState(clipsState)
   const [fileLimit, setFileLimit] = useState('500MB')
   useEffect(() => {
     const getPlanId = async () => {
@@ -78,10 +80,14 @@ const HomeMain = ({ navigate }) => {
     })
   }
 
+  const isImageDataUrl = (dataUrl) => {
+    return dataUrl.startsWith('data:image/') && dataUrl.length > 'data:image/'.length
+  }
+
   return (
     <div className={styles.mainArea}>
       <div className={styles.QuarterOne}>
-        <h2>Hello Aditya 👋</h2>
+        <h2>Hello {name}👋</h2>
         <div className={styles.card}>
           <div className={styles.titleWrapper}>
             <p>Quick Access</p>
@@ -168,8 +174,8 @@ const HomeMain = ({ navigate }) => {
           {clipBoard.length !== 0 ? (
             clipBoard.slice(0, 3).map((item) => {
               return (
-                <div className={styles.card} key={item.id}>
-                  <p>{item}</p>
+                <div className={styles.card}>
+                  {isImageDataUrl(item) ? <img src={item} alt="<Image Data>" /> : <p>{item}</p>}
                   <div
                     className={styles.copyBtn}
                     onClick={() => {
