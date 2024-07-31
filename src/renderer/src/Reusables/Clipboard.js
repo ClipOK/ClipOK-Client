@@ -39,7 +39,8 @@ class ClipboardWatcher extends EventEmitter {
         this.lastImage = currentImage
         this.lastImageSize = currentImageSize
         this.emit('image-changed', currentImage)
-        this.showNotification('New Image Copied', 'View')
+        console.log(currentImage)
+        this.showNotification('New Image Copied', 'View', currentImage.toDataURL())
         if (this.onImageChange) {
           this.onImageChange(currentImage)
         }
@@ -47,13 +48,14 @@ class ClipboardWatcher extends EventEmitter {
     }, this.interval)
   }
 
-  showNotification(title, body) {
+  showNotification(title, body, icon) {
     if (this.currentNotification) {
       this.currentNotification.close()
     }
     this.currentNotification = new Notification({
       title: title,
       body: body,
+      icon: icon,
       timeoutType: 'default' // Set the timeout type
     })
     this.currentNotification.show()

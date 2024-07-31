@@ -14,6 +14,7 @@ import socket from '../Socket/socket.js'
 import { clipsState } from '../GlobalStates/states.js'
 import { useRecoilState } from 'recoil'
 import { FaInbox } from 'react-icons/fa'
+import { copyImageToClipboard } from '../Reusables/data.js'
 
 const name = await window.electronStore.getCookie('name')
 
@@ -172,14 +173,20 @@ const HomeMain = ({ navigate }) => {
         </div>
         <div className={styles.cardWrapper}>
           {clipBoard.length !== 0 ? (
-            clipBoard.slice(0, 3).map((item) => {
+            clipBoard.slice(0, 3).map((item, index) => {
               return (
-                <div className={styles.card}>
+                <div className={styles.card} key={index}>
                   {isImageDataUrl(item) ? <img src={item} alt="<Image Data>" /> : <p>{item}</p>}
                   <div
                     className={styles.copyBtn}
                     onClick={() => {
-                      copyToClipboard(item)
+                      if (isImageDataUrl(item)) {
+                        const image = new Image()
+                        image.src = item
+                        copyImageToClipboard(image)
+                      } else {
+                        copyToClipboard(item)
+                      }
                     }}
                   >
                     <MdCopyAll />

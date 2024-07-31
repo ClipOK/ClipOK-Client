@@ -6,6 +6,7 @@ import { clipsState } from '../GlobalStates/states.js' // Added the clipBoardSta
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { MdOutlineContentCopy } from 'react-icons/md'
 import { Tooltip } from 'react-tooltip'
+import { copyImageToClipboard } from '../Reusables/data.js' // Added the copyImageToClipboard function
 
 const ClipBoard = () => {
   const [combinedClipsState, setCombinedClips] = useRecoilState(clipsState)
@@ -50,7 +51,13 @@ const ClipBoard = () => {
                 <div className={styles.copy}>
                   <MdOutlineContentCopy
                     onClick={() => {
-                      navigator.clipboard.writeText(item)
+                      if (isImageDataUrl(item)) {
+                        const image = new Image()
+                        image.src = item
+                        copyImageToClipboard(image)
+                      } else {
+                        navigator.clipboard.writeText(item)
+                      }
                     }}
                   >
                     Copy
